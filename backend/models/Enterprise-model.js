@@ -5,7 +5,8 @@ const enterpriseSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
-        unique: true,  },
+        unique: true,
+        trim: true},
     bank: {
         type: String,
         required: true,
@@ -16,7 +17,7 @@ currentSupporter:{
     required: true,
     trim: true, 
 },
-previuossupporter:{
+previuosSupporter:{
     type: String,
     trim: true, 
 },
@@ -24,7 +25,7 @@ EnterpriseSideCommunicator:{
     type: String,
     trim: true, 
 },
-currentstatus:{
+currentStatus:{
     type: String,
     trim: true,
     enum: ['active', 'inactive', 'pending'],
@@ -39,7 +40,7 @@ isSchool: {
     default: false
 
 },
-iswaterbilling:{
+isWaterBilling:{
     type: Boolean,
     default: false
 },

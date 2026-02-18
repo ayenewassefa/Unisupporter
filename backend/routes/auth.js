@@ -56,5 +56,35 @@ router.post('/register', async (req, res) => {
     });
   }
 });
+router.post('/login', async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    // 1. Basic validation
+    const user = await User .findOne({ username });
+    if (!user) {
+      return res.status(400).json({ message: 'Invalid username or password' });
+    }
+    const isMatch = await user.comparePassword(password);
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Invalid username or password' });
+    } 
+    const token = jwt.sign(
+      { userId: user._id, role: user.role, username: user.username },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
+    res.json({  
+      message: 'Login successful',
+      token,
+      user: { 
+        id: user._id,
+        username: user.username,
+        role: user.role
+      }
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Server error during login", error: err.message });
+  }
+});
 
 module.exports = router;

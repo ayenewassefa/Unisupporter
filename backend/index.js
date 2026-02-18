@@ -16,7 +16,7 @@ app.use('/api/enterprises', enterpriseRoutes);
 app.use('/api/notes', noteRoutes);
 
 app.get('/', (req, res) => {
-  res.send('UniSupporter Backend is ALIVE! 🚀');
+  res.json('UniSupporter Backend is ALIVE! 🚀');
 });
 
 // Connect first, then start server
