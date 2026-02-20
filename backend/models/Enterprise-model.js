@@ -25,7 +25,7 @@ EnterpriseSideCommunicator:{
     type: String,
     trim: true, 
 },
-currentStatus:{
+currentstatus:{
     type: String,
     trim: true,
     enum: ['active', 'inactive', 'pending'],

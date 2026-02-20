@@ -24,6 +24,15 @@ router.get('/search', async (req, res) => {
     } catch (err) {
         res.status(500).json({ message: 'Search failed', error: err.message });
     }
-}); // <--- CLOSE THE GET ROUTE HERE
+}); // <--- CLOSE THE SEARCH ROUTE HERE
+    router.get('/all' , async (req, res) => {
+        try {
+            const enterprises = await Enterprise.find().sort({ createdAt: -1 });
+           res.status(200).json(enterprises);
+        } catch (err) {
+            res.status(500).json({ message: 'Failed to retrieve enterprises', error: err.message });
+        }
+    }); // <--- CLOSE THE GET ALL ROUTE HERE
+
 
 module.exports = router; // <--- EXPORT OUTSIDE ALL ROUTES

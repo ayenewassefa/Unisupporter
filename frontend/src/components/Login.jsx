@@ -1,55 +1,57 @@
 import { useState } from 'react';
 import axios from 'axios';
 
-function Login() {
-  // 1. STATE: Memory for what the agent types
+// 1. We must pass { onLoginSuccess } here so the function can use it
+function Login({ onLoginSuccess }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
 
-  // 2. LOGIC: What happens when they click the button
   const handleLogin = async (e) => {
-    e.preventDefault(); // Stop the page from refreshing (Standard SE practice)
+    e.preventDefault(); 
     try {
       const response = await axios.post('http://localhost:5000/api/auth/login', {
         username,
         password
       });
-      setMessage("Login Successful! Token saved.");
+
+      // Flow: If successful, trigger the parent switch
+      onLoginSuccess(); 
       console.log("Token:", response.data.token);
+
     } catch (error) {
-      setMessage(error.response?.data?.message || "Login Failed");
+      console.error("Full error:", error);
+      // Optional chaining (?.) must not have a space
+      const serverMessage = error.response?.data?.message || "Server unreachable";
+      setMessage(serverMessage);
     }
-  };
+  }; // <--- THIS BRACE was missing or in the wrong place!
 
   return (
-    <div className="flex flex-col items-center justify-center p-6 bg-white shadow-2xl rounded-2xl border border-slate-100 max-w-sm mx-auto mt-20">
+    <div className="flex flex-col items-center justify-center p-6 bg-white shadow-xl rounded-2xl border border-slate-100 max-w-sm mx-auto mt-20">
       <h2 className="text-2xl font-bold text-slate-800 mb-6 text-center">Support Agent Login</h2>
       
       <form onSubmit={handleLogin} className="w-full space-y-4">
-        {/* Username Input */}
         <div>
           <label className="block text-sm font-semibold text-slate-600 mb-1">Username</label>
           <input 
             type="text" 
-            className="w-full p-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full p-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Enter your username"
-            onChange={(e) => setUsername(e.target.value)} // Logic: Update memory
+            onChange={(e) => setUsername(e.target.value)} 
           />
         </div>
 
-        {/* Password Input */}
         <div>
           <label className="block text-sm font-semibold text-slate-600 mb-1">Password</label>
           <input 
             type="password" 
-            className="w-full p-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="••••••••"
-            onChange={(e) => setPassword(e.target.value)} // Logic: Update memory
+            className="w-full p-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="•••••••"
+            onChange={(e) => setPassword(e.target.value)} 
           />
         </div>
 
-        {/* Login Button - Dynamic Color Logic */}
         <button 
           disabled={username === "" || password === ""}
           className={`w-full py-3 rounded-lg font-bold text-white transition-all ${
@@ -60,8 +62,7 @@ function Login() {
         </button>
       </form>
 
-      {/* Message Area */}
-      {message && <p className="mt-4 text-sm font-medium text-red-500">{message}</p>}
+      {message && <p className="mt-4 text-sm font-medium text-red-500 text-center">{message}</p>}
     </div>
   );
 }
